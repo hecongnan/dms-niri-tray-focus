@@ -1,0 +1,39 @@
+--- a/Modules/DankBar/Widgets/SystemTrayBar.qml
++++ b/Modules/DankBar/Widgets/SystemTrayBar.qml
+@@ -75,2 +75,16 @@
+ 
++    // Tray activation does not reliably focus existing niri windows.
++    function activateOrFocusTrayItem(trayItem) {
++        const helper = Quickshell.env("DMS_TRAY_FOCUS_HELPER");
++        if (!CompositorService.isNiri || !helper) {
++            trayItem.activate();
++            return;
++        }
++        Proc.runCommand("tray-focus-" + trayItem.id,
++            [helper, trayItem.id], (output, exitCode) => {
++                if (exitCode !== 0)
++                    trayItem.activate();
++            }, 0, 10000);
++    }
++
+     function activateInlineTrayItem(trayItem, anchorItem) {
+@@ -79,3 +93,3 @@
+         if (!trayItem.onlyMenu) {
+-            trayItem.activate();
++            root.activateOrFocusTrayItem(trayItem);
+             return;
+@@ -607,3 +621,3 @@
+                             if (!delegateRoot.trayItem.onlyMenu) {
+-                                delegateRoot.trayItem.activate();
++                                root.activateOrFocusTrayItem(delegateRoot.trayItem);
+                                 return;
+@@ -939,3 +953,3 @@
+                     if (!trayItem.onlyMenu) {
+-                        trayItem.activate();
++                        root.activateOrFocusTrayItem(trayItem);
+                         return;
+@@ -1481,3 +1495,3 @@
+                                     if (mouse.button === Qt.LeftButton && !trayItem.onlyMenu) {
+-                                        trayItem.activate();
++                                        root.activateOrFocusTrayItem(trayItem);
+                                         root.menuOpen = false;
