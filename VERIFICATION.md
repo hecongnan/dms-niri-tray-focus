@@ -16,3 +16,12 @@
 
 未通过此安装器重启实际桌面；当前桌面使用之前已部署的等效补丁。
 独立安装器的 systemd 重启流程需要使用者在自己的 DMS 会话中验证。
+
+## 2026-10-23 FlClash 隐藏窗口修复
+
+本机 FlClash 0.8.99 的 Ayatana 托盘仅提供菜单和 SecondaryActivate，未提供 Activate。
+隐藏时窗口不在 niri 的窗口列表中；已确认触发 DBusMenu 的“显示”项能恢复
+app_id=com.follow.clash 的窗口。脚本新增仅针对 FlClash 的恢复逻辑。
+
+`python3 test_focus.py` 验证动态菜单 ID、隐藏窗口恢复与聚焦、已有窗口直接聚焦、
+禁用/隐藏/勾选项排除、其他应用仍使用原始失败回退，共 6 项通过。
